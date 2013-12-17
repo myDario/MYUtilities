@@ -246,11 +246,13 @@ static BOOL getPropertyInfo(Class cls,
         return NO;
     }
 
+    objc_property_t originalProperty = property;
     // Find the class that introduced this property, as cls may have just inherited it:
     do {
         *declaredInClass = cls;
         cls = class_getSuperclass(cls);
-    } while (class_getProperty(cls, name) == property);
+        property = originalProperty;
+    } while ((originalProperty = class_getProperty(cls, name)) != nil);
     
     // Get the property's type:
     BOOL isSettable;
